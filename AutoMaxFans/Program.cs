@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Made By Sunehildeep
+using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace AutoMaxFans
 
 		private static bool overheating = false;
 
-		private static bool changedonce = false;
+		private static bool changedone = false;
 
 		enum Fan_Mode_Type
         {
@@ -115,13 +116,13 @@ namespace AutoMaxFans
 				{
 					Set_WMI_FanMode(Fan_Mode_Type.Max);
 					overheating = true;
-					changedonce = false;
+					changedone = false;
 				}
-				else if (gpu < 78 && cpu < 80 && !changedonce)
+				else if (gpu < 78 && cpu < 80 && !changedone)
 				{
 					Set_WMI_FanMode(Fan_Mode_Type.Auto);
 					overheating = false;
-					changedonce = true;
+					changedone = true;
 				}
 			}
 		}
