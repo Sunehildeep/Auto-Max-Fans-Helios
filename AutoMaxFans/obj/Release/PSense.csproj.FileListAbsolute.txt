@@ -1,0 +1,10 @@
+C:\Users\pcgam\source\repos\PSense\PSense\bin\Release\PSense.exe.config
+C:\Users\pcgam\source\repos\PSense\PSense\bin\Release\PSense.exe
+C:\Users\pcgam\source\repos\PSense\PSense\bin\Release\PSense.pdb
+C:\Users\pcgam\source\repos\PSense\PSense\bin\Release\OpenHardwareMonitorLib.dll
+C:\Users\pcgam\source\repos\PSense\PSense\bin\Release\TsDotNetLib.dll
+C:\Users\pcgam\source\repos\PSense\PSense\obj\Release\PSense.csproj.AssemblyReference.cache
+C:\Users\pcgam\source\repos\PSense\PSense\obj\Release\PSense.csproj.CoreCompileInputs.cache
+C:\Users\pcgam\source\repos\PSense\PSense\obj\Release\PSense.csproj.CopyComplete
+C:\Users\pcgam\source\repos\PSense\PSense\obj\Release\PSense.exe
+C:\Users\pcgam\source\repos\PSense\PSense\obj\Release\PSense.pdb

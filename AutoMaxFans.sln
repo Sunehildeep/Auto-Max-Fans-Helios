@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMaxFans", "AutoMaxFans\AutoMaxFans.csproj", "{39DFA62A-BF65-460E-B4B2-870D82E0BD01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39DFA62A-BF65-460E-B4B2-870D82E0BD01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DFA62A-BF65-460E-B4B2-870D82E0BD01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DFA62A-BF65-460E-B4B2-870D82E0BD01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DFA62A-BF65-460E-B4B2-870D82E0BD01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9AFFC975-464A-4B61-91D2-5D6388561AF8}
+	EndGlobalSection
+EndGlobal

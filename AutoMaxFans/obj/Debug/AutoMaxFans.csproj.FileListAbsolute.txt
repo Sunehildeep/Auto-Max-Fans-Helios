@@ -1,0 +1,10 @@
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\bin\Debug\AutoMaxFans.exe.config
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\bin\Debug\AutoMaxFans.exe
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\bin\Debug\AutoMaxFans.pdb
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\bin\Debug\OpenHardwareMonitorLib.dll
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\bin\Debug\TsDotNetLib.dll
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\Debug\AutoMaxFans.csproj.AssemblyReference.cache
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\Debug\AutoMaxFans.csproj.CoreCompileInputs.cache
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\Debug\AutoMaxFans.csproj.CopyComplete
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\Debug\AutoMaxFans.exe
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\Debug\AutoMaxFans.pdb
