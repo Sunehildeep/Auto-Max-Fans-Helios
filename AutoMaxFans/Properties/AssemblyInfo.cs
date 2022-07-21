@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PSense")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("AutoMaxFans")]
+[assembly: AssemblyDescription("Made By Sunehildeep")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PSense")]
+[assembly: AssemblyProduct("AutoMaxFans")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
