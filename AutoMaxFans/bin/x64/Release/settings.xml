@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rootElement>
+  <Threshold>
+    <GPU>76</GPU>
+    <CPU>75</CPU>
+  </Threshold>
+</rootElement>
