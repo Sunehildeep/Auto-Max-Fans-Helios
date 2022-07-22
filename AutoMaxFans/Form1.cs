@@ -399,17 +399,22 @@ namespace AutoMaxFans
 			this.WindowState = FormWindowState.Normal;
 		}
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        private async void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-			if(!checkBox3.Checked)
-            {
+			if (!checkBox3.Checked)
+			{
 				checkBox1.Enabled = false;
 				checkBox2.Enabled = false;
 				numericUpDown1.Enabled = false;
 				numericUpDown2.Enabled = false;
-            }
+				if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u)
+				{
+					await setCpuFan(0);
+					await setGpuFan(0);
+				}
+			}
 			else
-            {
+			{
 				checkBox1.Enabled = true;
 				checkBox2.Enabled = true;
 				numericUpDown1.Enabled = true;
