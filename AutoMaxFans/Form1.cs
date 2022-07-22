@@ -5,6 +5,8 @@ using System.IO.Pipes;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using TsDotNetLib;
 
 namespace AutoMaxFans
@@ -13,6 +15,8 @@ namespace AutoMaxFans
     {
 		private static bool cpuchangedone = false;
 		private static bool cpuoverheating = false;
+		private string _filename = "settings.xml";
+
 		private static bool gpuoverheating = false;
 		
 		private int gputhreshold;
@@ -22,10 +26,17 @@ namespace AutoMaxFans
 
 		private static bool gpuchangedone = false;
 		private static System.Timers.Timer aTimer;
+		private XDocument _doc;
 
 		public Form1()
         {
             InitializeComponent();
+			_doc = XDocument.Load(_filename);
+			_doc.Save(_filename);
+			XElement node = _doc.XPathSelectElement("//Threshold/GPU[1]");
+			numericUpDown1.Value = Convert.ToDecimal(node.Value);
+			node = _doc.XPathSelectElement("//Threshold/CPU[1]");
+			numericUpDown2.Value = Convert.ToDecimal(node.Value);
 			aTimer = new System.Timers.Timer(1000);
 			aTimer.Elapsed += runAutoFans;
 			aTimer.AutoReset = true;
@@ -55,6 +66,10 @@ namespace AutoMaxFans
 			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u)
             {
 				e.Cancel = true;
+				_doc.XPathSelectElement("//Threshold").RemoveAll();
+				_doc.XPathSelectElement("//Threshold").Add(new XElement("GPU", numericUpDown1.Value));
+				_doc.XPathSelectElement("//Threshold").Add(new XElement("CPU", numericUpDown2.Value));
+				_doc.Save(_filename);
 				await setCpuFan(0);
 				await setGpuFan(0);
 				Environment.Exit(1);
