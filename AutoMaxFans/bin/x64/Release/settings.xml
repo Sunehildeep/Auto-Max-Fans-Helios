@@ -2,6 +2,6 @@
 <rootElement>
   <Threshold>
     <GPU>76</GPU>
-    <CPU>75</CPU>
+    <CPU>80</CPU>
   </Threshold>
 </rootElement>

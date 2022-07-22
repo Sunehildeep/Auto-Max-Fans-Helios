@@ -27,6 +27,8 @@ namespace AutoMaxFans
 		private static bool gpuchangedone = false;
 		private static System.Timers.Timer aTimer;
 		private XDocument _doc;
+		private int counter = 0;
+
 
 		public Form1()
         {
@@ -83,7 +85,7 @@ namespace AutoMaxFans
 
 		private async void checkTemps()
 		{
-			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u)
+			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u && checkBox3.Checked)
 			{
 				try
 				{
@@ -141,17 +143,35 @@ namespace AutoMaxFans
 					}
 					if (cpuenabled)
 					{
-						if (cpu >= cputhreshold && !cpuoverheating)
+						Console.WriteLine(counter);
+						if (cpu >= cputhreshold)
 						{
-							await setCpuFan(100);
-							cpuoverheating = true;
-							cpuchangedone = false;
+							counter++;
+							if (!cpuoverheating)
+							{
+								if (gpuoverheating)
+								{
+									await setCpuFan(100);
+									cpuoverheating = true;
+									cpuchangedone = false;
+								}
+								else if(counter >= 10)
+                                {
+									await setCpuFan(100);
+									cpuoverheating = true;
+									cpuchangedone = false;
+								}
+							}
 						}
-						else if (cpu < cputhreshold && !cpuchangedone)
+						else if (cpu < cputhreshold)
 						{
-							await setCpuFan(0);
-							cpuoverheating = false;
-							cpuchangedone = true;
+							if (!cpuchangedone)
+							{
+								await setCpuFan(0);
+								cpuoverheating = false;
+								cpuchangedone = true;
+							}
+							counter = 0;
 						}
 					}
 				}
@@ -378,5 +398,23 @@ namespace AutoMaxFans
 			this.Show();
 			this.WindowState = FormWindowState.Normal;
 		}
-	}
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+			if(!checkBox3.Checked)
+            {
+				checkBox1.Enabled = false;
+				checkBox2.Enabled = false;
+				numericUpDown1.Enabled = false;
+				numericUpDown2.Enabled = false;
+            }
+			else
+            {
+				checkBox1.Enabled = true;
+				checkBox2.Enabled = true;
+				numericUpDown1.Enabled = true;
+				numericUpDown2.Enabled = true;
+			}
+        }
+    }
 }
