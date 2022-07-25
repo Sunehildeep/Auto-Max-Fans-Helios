@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <rootElement>
   <Threshold>
-    <GPU>76</GPU>
+    <GPU>78</GPU>
     <CPU>80</CPU>
   </Threshold>
 </rootElement>

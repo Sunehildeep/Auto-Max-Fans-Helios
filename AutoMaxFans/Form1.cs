@@ -15,7 +15,8 @@ namespace AutoMaxFans
     {
 		private static bool cpuchangedone = false;
 		private static bool cpuoverheating = false;
-		private string _filename = "settings.xml";
+
+		private string _filename = Path.Combine(Application.StartupPath, "settings.xml");
 
 		private static bool gpuoverheating = false;
 		
@@ -33,19 +34,34 @@ namespace AutoMaxFans
 		public Form1()
         {
             InitializeComponent();
-			_doc = XDocument.Load(_filename);
-			_doc.Save(_filename);
-			XElement node = _doc.XPathSelectElement("//Threshold/GPU[1]");
-			numericUpDown1.Value = Convert.ToDecimal(node.Value);
-			node = _doc.XPathSelectElement("//Threshold/CPU[1]");
-			numericUpDown2.Value = Convert.ToDecimal(node.Value);
-			aTimer = new System.Timers.Timer(1000);
-			aTimer.Elapsed += runAutoFans;
-			aTimer.AutoReset = true;
-			aTimer.Enabled = true;
-			notifyIcon1.BalloonTipText = "The app has been minimized to the system tray.";
-			notifyIcon1.Text = "Auto Max Fans";
-			
+			try
+			{
+				_doc = XDocument.Load(_filename);
+				_doc.Save(_filename);
+				XElement node = _doc.XPathSelectElement("//Threshold/GPU[1]");
+				numericUpDown1.Value = Convert.ToDecimal(node.Value);
+				node = _doc.XPathSelectElement("//Threshold/CPU[1]");
+				numericUpDown2.Value = Convert.ToDecimal(node.Value);
+				set_coolboost_state(state: true);
+				aTimer = new System.Timers.Timer(1000);
+				aTimer.Elapsed += runAutoFans;
+				aTimer.AutoReset = true;
+				aTimer.Enabled = true;
+				notifyIcon1.BalloonTipText = "The app has been minimized to the system tray.";
+				notifyIcon1.Text = "Auto Max Fans";
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(e.ToString());
+			}
+
+		}
+
+		private void Form1_Show(object sender, EventArgs e)
+        {
+			string[] args = Environment.GetCommandLineArgs();
+			if (args[1] == "-m") this.WindowState = FormWindowState.Minimized;
+
 		}
 
 		private void Form1_Resize(object sender, EventArgs e)
@@ -68,12 +84,19 @@ namespace AutoMaxFans
 			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u)
             {
 				e.Cancel = true;
-				_doc.XPathSelectElement("//Threshold").RemoveAll();
-				_doc.XPathSelectElement("//Threshold").Add(new XElement("GPU", numericUpDown1.Value));
-				_doc.XPathSelectElement("//Threshold").Add(new XElement("CPU", numericUpDown2.Value));
-				_doc.Save(_filename);
-				await setCpuFan(0);
-				await setGpuFan(0);
+				try
+				{
+					_doc.XPathSelectElement("//Threshold").RemoveAll();
+					_doc.XPathSelectElement("//Threshold").Add(new XElement("GPU", numericUpDown1.Value));
+					_doc.XPathSelectElement("//Threshold").Add(new XElement("CPU", numericUpDown2.Value));
+					_doc.Save(_filename);
+					await setCpuFan(0);
+					await setGpuFan(0);		
+				}
+                catch (Exception e2)
+                {
+					MessageBox.Show(e2.ToString());
+				}
 				Environment.Exit(1);
 			}
 		}
@@ -335,6 +358,59 @@ namespace AutoMaxFans
 			}
 		}
 
+		public static async Task<ulong> WMIGetFunction(uint intput)
+		{
+			try
+			{
+				NamedPipeClientStream cline_stream = new NamedPipeClientStream(".", "predatorsense_service_namedpipe", (PipeDirection)3);
+				cline_stream.Connect();
+				ulong result = await Task.Run(delegate
+				{
+					IPCMethods.SendCommandByNamedPipe(cline_stream, 9, new object[1]
+					{
+						intput
+					});
+					((PipeStream)cline_stream).WaitForPipeDrain();
+					byte[] array = new byte[13];
+					((Stream)(object)cline_stream).Read(array, 0, array.Length);
+					return BitConverter.ToUInt64(array, 5);
+				}).ConfigureAwait(continueOnCapturedContext: false);
+				((Stream)(object)cline_stream).Close();
+				return result;
+			}
+			catch (Exception)
+			{
+				return 4294967295uL;
+			}
+		}
+
+		public static async Task<uint> WMISetFunction(ulong intput)
+		{
+			try
+			{
+				NamedPipeClientStream cline_stream = new NamedPipeClientStream(".", "predatorsense_service_namedpipe", (PipeDirection)3);
+				cline_stream.Connect();
+				uint result = await Task.Run(delegate
+				{
+					IPCMethods.SendCommandByNamedPipe(cline_stream, 10, new object[1]
+					{
+						intput
+					});
+					((PipeStream)cline_stream).WaitForPipeDrain();
+					byte[] array = new byte[9];
+					((Stream)(object)cline_stream).Read(array, 0, array.Length);
+					return BitConverter.ToUInt32(array, 5);
+				}).ConfigureAwait(continueOnCapturedContext: false);
+				((Stream)(object)cline_stream).Close();
+				return result;
+			}
+			catch (Exception)
+			{
+				return uint.MaxValue;
+			}
+		}
+
+
 		private async Task<bool> setGpuFan(int percentage)
         {
 			if(percentage == 100)
@@ -350,6 +426,7 @@ namespace AutoMaxFans
 			else if(percentage == 0)
             {
 				await set_single_custom_fan_state(true, 100u, "GPU");
+				if (get_coolboost_state() == false) set_coolboost_state(state: true);
 			}
 			return true;
         }
@@ -369,7 +446,8 @@ namespace AutoMaxFans
 			else if(percentage == 0)
             {
 				await set_single_custom_fan_state(true, 100u, "CPU");
-            }
+				if (get_coolboost_state() == false) set_coolboost_state(state: true);
+			}
 			return true;
         }
 
@@ -399,7 +477,25 @@ namespace AutoMaxFans
 			this.WindowState = FormWindowState.Normal;
 		}
 
-        private async void checkBox3_CheckedChanged(object sender, EventArgs e)
+		public static bool set_coolboost_state(bool state)
+		{
+			if ((WMISetFunction(7uL | (ulong)((state ? 1 : 0) << 16)).GetAwaiter().GetResult() & 0xFF) == 0)
+			{
+				return true;
+			}
+			return false;
+		}
+		private static bool get_coolboost_state()
+		{
+			ulong result = WMIGetFunction(519u).GetAwaiter().GetResult();
+			if ((result & 0xFF) == 0L && ((result >> 8) & 0xFF) == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		private async void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
 			if (!checkBox3.Checked)
 			{
