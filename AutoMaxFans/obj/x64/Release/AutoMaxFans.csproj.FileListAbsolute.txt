@@ -9,3 +9,4 @@ C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\x64\Release\AutoMaxFans.
 C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\x64\Release\AutoMaxFans.csproj.CopyComplete
 C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\x64\Release\AutoMaxFans.exe
 C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\x64\Release\AutoMaxFans.pdb
+C:\Users\pcgam\source\repos\AutoMaxFans\AutoMaxFans\obj\x64\Release\AutoMaxFans.csproj.AssemblyReference.cache

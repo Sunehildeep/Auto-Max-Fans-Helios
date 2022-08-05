@@ -33,7 +33,8 @@ namespace AutoMaxFans
 
 		public Form1()
         {
-            InitializeComponent();
+			
+			InitializeComponent();
 			try
 			{
 				_doc = XDocument.Load(_filename);
@@ -43,6 +44,7 @@ namespace AutoMaxFans
 				node = _doc.XPathSelectElement("//Threshold/CPU[1]");
 				numericUpDown2.Value = Convert.ToDecimal(node.Value);
 				set_coolboost_state(state: true);
+				
 				aTimer = new System.Timers.Timer(1000);
 				aTimer.Elapsed += runAutoFans;
 				aTimer.AutoReset = true;
@@ -59,8 +61,13 @@ namespace AutoMaxFans
 
 		private void Form1_Show(object sender, EventArgs e)
         {
-			string[] args = Environment.GetCommandLineArgs();
-			if (args[1] == "-m") this.WindowState = FormWindowState.Minimized;
+			try
+			{
+				string[] args = Environment.GetCommandLineArgs();
+
+				if (args[1] == "-m") this.WindowState = FormWindowState.Minimized;
+			}
+			catch { }
 
 		}
 
@@ -78,7 +85,7 @@ namespace AutoMaxFans
 				notifyIcon1.Visible = false;
 			}
 		}
-
+		
 		private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u)
@@ -108,6 +115,7 @@ namespace AutoMaxFans
 
 		private async void checkTemps()
 		{
+			
 			if (Registry.CheckLM("SOFTWARE\\OEM\\PredatorSense\\FanControl", "CurrentFanMode", 0u) == 0u && checkBox3.Checked)
 			{
 				try
@@ -413,21 +421,20 @@ namespace AutoMaxFans
 
 		private async Task<bool> setGpuFan(int percentage)
         {
-			if(percentage == 100)
-            {
-				if (!cpuoverheating) // Does not work normally. This is the only workaround for now
-				{
-					await set_single_custom_fan_state(false, 100u, "CPU");
-					await set_single_custom_fan_state(false, 100u, "GPU");
-					await set_single_custom_fan_state(true, 100u, "CPU");
-				}
-				else await set_single_custom_fan_state(false, 100u, "GPU");
-			}
-			else if(percentage == 0)
+
+			if(percentage == 0)
             {
 				await set_single_custom_fan_state(true, 100u, "GPU");
 				if (get_coolboost_state() == false) set_coolboost_state(state: true);
 			}
+			
+			if (!cpuoverheating) // Does not work normally. This is the only workaround for now
+			{
+				await set_single_custom_fan_state(false, 100u, "CPU");
+				await set_single_custom_fan_state(false, (ulong) percentage, "GPU");
+				await set_single_custom_fan_state(true, 100u, "CPU");
+			}
+			else await set_single_custom_fan_state(false, (ulong) percentage, "GPU");
 			return true;
         }
 
