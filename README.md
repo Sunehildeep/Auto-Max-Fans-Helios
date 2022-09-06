@@ -9,3 +9,5 @@ You need to be on "auto" fan mode in predator sense or it will not work. It has 
 - Both fans work independently
 - Ability to enable or disable either of the fan in the program
 - GUI to control everything
+
+![image](https://user-images.githubusercontent.com/23412507/188697655-b0ca9f83-40e3-41cb-90e6-894392b8fd42.png)
